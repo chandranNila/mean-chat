@@ -1,0 +1,40 @@
+<div class="all-wrapper menu-side with-pattern">
+  <div class="auth-box-w wider">
+    <div class="logo-w">
+      <a >
+        <img alt="" src="../../assets/img/MZLogo-1.svg">
+      </a>
+    </div>
+    <h4 class="auth-header">
+      Create new account
+    </h4>
+
+    <form #regForm="ngForm">
+      <div class="form-group">
+        <label > User Name</label>
+        <input class="form-control" placeholder="Enter user Name" type="text" name="signUpUserName" [(ngModel)]="users.username" required>
+        <div class="pre-icon os-icon os-icon-email-2-at2">{{users.username}}</div>
+      </div>
+      <div class="form-group">
+        <label > Email Id</label>
+        <input class="form-control" placeholder="Enter email" type="email" name="signUpEmail" [(ngModel)]="users.mailId" required>
+        <div class="pre-icon os-icon os-icon-fingerprint"></div>
+      </div>
+      <div class="form-group">
+        <label > password</label>
+        <input class="form-control" placeholder="Enter Password" type="password" name="signUpPassword"  [(ngModel)]="users.password" required>
+        <div class="pre-icon os-icon os-icon-fingerprint"></div>
+      </div>
+      <div class="form-group">
+        <label > upload</label>
+        <input type="file"  class="hide_file upload-file" name="profile" accept="image/*" data-max-size="1000000" [(ngModel)]="profile" (change)="onChange($event)"/><!--accept=".xls"--><!--[(ngModel)]="groupFile" (change)="onChange($event)"-->
+        <div class="pre-icon os-icon os-icon-fingerprint"></div>
+      </div>
+      <span>{{profileSize}}</span>
+
+      <div class="buttons-w">
+        <button class="btn btn-primary" [disabled]="!regForm.form.valid" (click)="userSignUp()">Register Now</button>
+      </div>
+    </form>
+  </div>
+</div>

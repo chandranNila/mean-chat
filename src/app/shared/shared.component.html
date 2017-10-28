@@ -1,0 +1,576 @@
+
+<!--Create Group-->
+
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Select Chat Group</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div >
+          <form  #joinForm="ngForm">
+            <div class="form-group">
+              <label >Group Name</label>
+              <input type="text" class="form-control" [(ngModel)]="newGroup.groupName"  name="group" placeholder="groupName" required="" />
+            </div>
+            <div class="form-group">
+              <label >Group Icon</label>
+              <input type="file"  class="hide_file upload-file" name="profile" accept="image/*" data-max-size="1000000" [(ngModel)]="profile" (change)="onChange($event,'create')"/><!--[(ngModel)]="profile"--><!--accept=".xls"--><!--[(ngModel)]="groupFile" (change)="onChange($event)"-->
+            </div>
+            <span>{{profileSize}}</span>
+            <div class="form-group clearfix model-right">
+              <button type="submit" class="btn btn-success pull-right" data-dismiss="modal" [disabled]="!joinForm.form.valid" (click)="createGroup()">Create</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--Add Friends In Group-->
+
+
+<div class="modal fade" id="myMember" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Select Member</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div  class="side-div">
+          <div class="user-list" *ngFor="let unAddedMember of unAddedMembers">
+            <div class="user-w" (click)="addfriends(unAddedMember.username, unAddedMember._id, unAddedMember.path, groupSingalmessage.room, needGroupName)" *ngIf="unAddedMember.username !== loginUser.username">
+              <div class="avatar with-status status-green"></div>
+              <div class="user-info ungroupMember" >
+                 <span *ngIf="unAddedMember.path !== undefined">
+                   <img src="{{baseUrl+unAddedMember.path}}">
+                 </span>
+                <span *ngIf="unAddedMember.path === undefined">
+                  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                </span>
+                <div class="user-name" data-dismiss="modal">
+                  <p>  {{unAddedMember.username}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!--List Of Group Member-->
+
+
+
+<div class="modal fade" id="myGroup" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Group Members</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div  class="side-div" >
+          <div class="user-list" *ngFor="let groupMembers of groupMemberList">
+            <div class="user-w">
+              <div class="avatar with-status status-green GroupMembers">
+                <span *ngIf="groupMembers.path !== undefined && groupMembers.path !== null">
+                  <img src="{{baseUrl+groupMembers.path}}">
+                </span>
+                <span *ngIf="groupMembers.path === undefined">
+                  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                </span>
+                <span *ngIf="groupMembers.path === null">
+                  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                </span>
+               <span>{{groupMembers.userName}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+  <div class="content-i card">
+    <div class="content-box">
+      <div class="full-chat-w">
+        <div class="full-chat-i" id="full-height">
+
+          <!--Side bar-->
+          <nav >
+            <div class="full-chat-left">
+              <ul>
+                <li>
+                  <div class="os-tabs-w ">
+                    <ul class="nav nav-tabs upper centered" >
+                      <li class="active" (click)="friendsList()">
+                        <a >
+                          <i class="os-icon os-icon-mail-14"></i>
+                        </a>
+                      </li>
+                      <li  (click)="grouplist(sender.senderId, groupEnable = 'groupMeg')"><!--class="nav-item"-->
+                        <a >
+                          <i class="os-icon os-icon-ui-93"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li>
+                  <div  class="scrollbar style-4 side-scroll" id="" *ngIf="singalUser">
+                    <div class="user-list" *ngFor="let chatList of chatLists">
+                      <div class="user-w single" (click)="selectUser(chatList._id,sender.senderId,chatList.username, chatList.path)" *ngIf="chatList.username !== loginUser.username">
+                        <div class="avatar with-status status-green " *ngIf="chatList.path === undefined">
+                          <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="avatar with-status status-green" *ngIf="chatList.path !== undefined">
+                          <img src="{{baseUrl+chatList.path}}">
+                        </div>
+                        <div class="user-info" >
+                          <div class="user-name" *ngIf="chatList.status === 'Online'">
+                            <p class="activeName">{{chatList.username}}</p>
+                            <p class="userStatus-Online"></p>
+                          </div>
+                          <div class="user-name" *ngIf="chatList.status === 'Offline'">
+                            <p class="activeName">{{chatList.username}}</p>
+                            <p class="userStatus-Offline"></p>
+                          </div>
+                        </div>
+                        <div class="avatar with-status status-green">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="scrollbar style-4 side-scroll" *ngIf="group">
+                    <div class="user-list" *ngFor="let groupList of groupLists">
+                      <div class="user-w" (click)="selectGroup(groupList.groupName, groupList._id, groupList.path)">
+                        <div class="avatar with-status status-green" *ngIf="groupList.path !== undefined">
+                          <img src="{{baseUrl+groupList.path}}">
+                        </div>
+                        <div class="avatar with-status status-green" *ngIf="groupList.path === undefined">
+                          <i class="fa fa-users" aria-hidden="true"></i>
+                        </div>
+                        <div class="user-info">
+                          <div class="user-name">{{groupList.groupName}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
+
+          <!--main div-->
+
+          <div class="full-chat-middle middle-chat-width">
+
+            <!--navbar-->
+
+            <div class="chat-head">
+
+              <!--To member and group-->
+              <div >
+                <div class="user-info" *ngIf="singalUser" >
+                  <span *ngIf="activeProfile !== undefined">
+                    <img src="{{baseUrl+activeProfile}}">
+                  </span>
+                  <span class="userDefaultBrowser" *ngIf="activeProfile === undefined">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                  </span>
+                  <a>
+                    {{activeName}}
+                  </a>
+                </div>
+                <div class="group-status-name" *ngIf="typingStatus === 'typing...'">
+                  <span >{{typingStatus}}</span>
+                </div>
+                <div class="user-info" *ngIf="groupMessage">
+                  <span *ngIf="activeGroupPic !== undefined">
+                    <img src="{{baseUrl+activeGroupPic}}">
+                  </span>
+                  <span *ngIf="activeGroupPic === undefined">
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                  </span>
+                  <a data-toggle="modal" data-target="#myGroup" (click)="groupMembers(groupSingalmessage.room)">
+                    {{groupSingalmessage.room}}
+                  </a>
+                </div>
+                <div class="group-status-name" *ngIf="groupTypingStatus === 'typing...'">
+                  <span>{{groupTypingName}} is {{groupTypingStatus}}</span>
+                </div>
+              </div>
+
+              <!--Extra Fields-->
+              <div>
+                <div class="user-info" *ngIf="singalUser" >
+                    <span *ngIf="loginUser.path !== undefined">
+                      <img src="{{baseUrl+loginUser.path}}">
+                    </span>
+                    <span class="user-right" *ngIf="loginUser.path === undefined">
+                      <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                    </span>
+                    <span class="dropdown-toggle active-user-name" data-toggle="dropdown">
+                      {{loginUser.username}}
+                    </span>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a data-toggle="modal" data-target="#myModal">
+                          <p (click)="createGroups()">Create Group</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a>
+                          <p (click)="logOut(loginUser.username)">Logout</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+              </div>
+              <div class="user-actions" *ngIf="groupMessage" >
+                <div >
+                  <span *ngIf="loginUser.path !== undefined">
+                    <img src="{{baseUrl+loginUser.path}}">
+                  </span>
+                  <span *ngIf="loginUser.path === undefined">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                  </span>
+                  <span class="dropdown-toggle" data-toggle="dropdown">
+                    {{loginUser.username}}
+                  </span>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a data-toggle="modal" data-target="#myMember" (click)="remove_duplicates(userList, groupMemberList)">
+                        <p (click)="add()">Add Member</p>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <p (click)="logOut(loginUser.username)">Logout</p>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!--single user message-->
+
+            <div  class="forHigh clearfix" *ngIf="singleMessage">
+              <ul #scrollMe class="chat-content-w scrollbar style-4" >
+                <li class="chat-content" *ngFor="let chat of chats">
+                  <div class="chat-message" *ngIf="chat.receiverId!==sender.receiverId; else rightchat">
+                    <div *ngIf="chat.type === 'text'">
+                      <div class="chat-message-content-w" *ngIf="chat.message === ''">
+                        <div class="fileup chat-message-content">{{chat.message}}</div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="chat.message !== ''">
+                        <div class="chat-message-content">{{chat.message}}</div>
+                      </div>
+                      <div class="chat-message-avatar u-avatar" *ngIf="chat.senderProfile !== undefined">
+                        <img src="{{baseUrl+chat.senderProfile}}" alt="User Avatar" class="img-circle" /><!--http://placehold.it/50/55C1E7/fff&text=ME-->
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="chat.senderProfile === undefined">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                      <div class="chat-message-date">{{ chat.updated_at | date: 'medium' }}</div>
+                    </div>
+                    <div *ngIf="chat.type === 'file'">
+                      <div class="chat-message-content-w" *ngIf="chat.message === ''">
+                        <div class="fileup chat-message-content">
+                          {{chat.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="chat.message !== ''">
+                        <div class="chat-message-content">
+                          {{chat.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="chat.senderProfile != 'undefined'">
+                        <img src="{{baseUrl+chat.senderProfile}}" alt="User Avatar" class="img-circle" /><!--http://placehold.it/50/55C1E7/fff&text=ME-->
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="chat.senderProfile == 'undefined'">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                      <div class=" fileup">
+                        <a [href]="baseUrl + chat.path">{{chat.originalname}}</a>
+                      </div>
+                      <div class="chat-message-date">{{ chat.updated_at | date: 'medium' }}</div>
+                    </div>
+                  </div>
+                  <ng-template #rightchat>
+                    <div class="chat-message self" *ngIf="chat.type === 'text'">
+                      <div class="chat-message-content-w" *ngIf="chat.message === ''">
+                        <div class="fileup chat-message-content">
+                          {{chat.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="chat.message !== ''">
+                        <div class="chat-message-content">{{chat.message}}</div>
+                      </div>
+                      <div class="chat-message-date">{{ chat.updated_at | date: 'medium' }}</div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path !== undefined">
+                        <img src="{{baseUrl+loginUser.path}}" alt="User Avatar" class="img-circle" /><!--http://placehold.it/50/55C1E7/fff&text=ME-->
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path === undefined">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                    <div class="chat-message self" *ngIf="chat.type === 'file'">
+                      <div class="chat-message-content-w" *ngIf="chat.message === ''">
+                        <div class="fileup chat-message-content" >
+                          {{chat.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="chat.message !== ''">
+                        <div class="chat-message-content" >
+                          {{chat.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path !== undefined || chat.senderProfile !== 'undefined'">
+                        <img src="{{baseUrl+loginUser.path}}" alt="User Avatar" class="img-circle" /><!--http://placehold.it/50/55C1E7/fff&text=ME-->
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path === undefined || chat.senderProfile === 'undefined'">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                      <div class=" fileup">
+                        <a [href]="baseUrl + chat.path">{{chat.originalname}}</a>
+                      </div>
+                      <div class="chat-message-date">{{ chat.updated_at | date: 'medium' }}</div>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+              <div class="chat-controls clearfix col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <form #msgForm="ngForm">
+                  <div class="chat-input input-div col-lg-10 col-md-9 col-sm-9 col-xs-7">
+                    <input type="text" [(ngModel)]="sender.message" (keypress)="typeMessage($event)" [disabled]="!sendMess" name="message" placeholder="type here..." type="text" required>
+                  </div>
+                  <div class="chat-btn btn-pos col-lg-2 col-md-3 col-sm-3 col-xs-5 text-center">
+                    <span data-toggle="modal" data-target="#myUpload"><i  class="fa fa-paperclip i-prob" aria-hidden="true"></i></span><!---->
+                    <button class="btn btn-primary btn-sm btn-padd text-center"  [disabled]="!msgForm.form.valid" (click)="individualMessage(sender)">
+                      <i class="fa fa-paper-plane-o i-replay" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+
+            <!--Group Message-->
+
+
+            <div *ngIf="groupMessage">
+              <ul #scrollMe class="chat-content-w scrollbar style-4" >
+                <li class="chat-content" *ngFor="let c of groupChats">
+                  <div class="chat-message" *ngIf="c.nickname!==groupSingalmessage.nickname; else rightchat">
+                    <div *ngIf="c.type === 'text'">
+                      <div class="chat-message-content-w" *ngIf="c.message === ''">
+                        <div class="fileup chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="c.message !== ''">
+                        <div class="chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="c.profilePic!= undefined">
+                        <img src="{{baseUrl+ c.profilePic}}" alt="User Avatar" class="img-circle" />
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="c.profilePic== undefined">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                      <div class="chat-message-date">{{ c.updated_at | date: 'medium' }}</div>
+                      <div class="model-right">
+                        <p>send by : {{c.nickname}}</p>
+                      </div>
+                    </div>
+                    <div *ngIf="c.type === 'file'">
+                      <div class="chat-message-content-w" *ngIf="c.message === ''">
+                        <div class="fileup chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="c.message !== ''">
+                        <div class="chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="c.profilePic!= 'undefined'">
+                        <img src="{{baseUrl+ c.profilePic}}" alt="User Avatar" class="img-circle" />
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="c.profilePic== 'undefined' || c.profilePic== null">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                      <div class="fileUrl">
+                        <a [href]="baseUrl + c.path">{{c.originalname}}</a>
+                      </div>
+                      <div class="chat-message-date">{{ c.updated_at | date: 'medium' }}</div>
+                      <div class="model-right">
+                        <p>send by : {{c.nickname}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #rightchat>
+                    <div class="chat-message self" *ngIf="c.type === 'text'">
+                      <div class="chat-message-content-w" *ngIf="c.message === ''">
+                        <div class="fileup chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="c.message !== ''">
+                        <div class="chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-date">{{ c.updated_at | date: 'medium' }}</div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path != undefined">
+                        <img src="{{baseUrl+loginUser.path}}" alt="User Avatar" class="img-circle" />
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path == undefined">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                      <div class="group-mgs">
+                        <p>send by : {{c.nickname}}</p>
+                      </div>
+                    </div>
+                    <div class="chat-message self" *ngIf="c.type === 'file'">
+                      <div class="chat-message-content-w" *ngIf="c.message === ''">
+                        <div class="fileup chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-content-w" *ngIf="c.message !== ''">
+                        <div class="chat-message-content">
+                          {{c.message}}
+                        </div>
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path !== undefined">
+                        <img src="{{baseUrl+loginUser.path}}" alt="User Avatar" class="img-circle" />
+                      </div>
+                      <div class="chat-message-avatar" *ngIf="loginUser.path === undefined">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                      </div>
+                      <div class=" fileup">
+                        <a [href]="baseUrl + c.path">{{c.originalname}}</a>
+                      </div>
+                      <div class="chat-message-date">{{ c.updated_at | date: 'medium' }}</div>
+                      <div class="group-mgs">
+                        <p>send by : {{c.nickname}}</p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+              <div class="chat-controls clearfix col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <form #msgForm="ngForm">
+                  <div class="chat-input input-div clearfix col-lg-10 col-md-10 col-sm-10 col-xs-7" >
+                    <input type="text" [(ngModel)]="groupSingalmessage.message" (keypress)="groupTypeMessage($event, groupSingalmessage.room)" [disabled]="!sendMess" name="message" placeholder="type here..." required>
+                  </div>
+                  <div class="chat-btn btn-pos col-lg-2 col-md-2 col-sm-2 col-xs-5 text-center">
+                    <span data-toggle="modal" data-target="#groupUpload"><i  class="fa fa-paperclip i-prob" aria-hidden="true"></i></span>
+                    <button class="btn btn-primary btn-sm btn-padd text-center" [disabled]="!msgForm.form.valid" (click)="sendGroupMessage(groupSingalmessage)">
+                      <i class="fa fa-paper-plane-o i-replay" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!--individual Upload-->
+
+  <div class="modal fade" id="myUpload" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload your file</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <form #pupUpForm="ngForm">
+          <div class="modal-body">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+              <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 model-left-content">
+                select your file
+              </div>
+              <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 model-left-content">
+                <input type="file"  class="hide_file" name="indfile" [(ngModel)]="indFile" (change)="onChange($event)" required><!--accept=".xls"-->
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 upload-padd">
+              <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 model-left-content"></div>
+              <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 model-left-content">
+                <button (click)="individualMessage(filetype)" data-dismiss="modal" [disabled]="!isUpload">Upload</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!--group Upload-->
+
+
+<div class="modal fade" id="groupUpload" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Upload your file</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 model-left-content">
+            select your file
+          </div>
+          <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 model-left-content">
+            <input type="file"  class="hide_file" name="groupfile" [(ngModel)]="groupFile" (change)="onChange($event, 'message')" required/><!--accept=".xls"-->
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 upload-padd">
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 model-left-content"></div>
+          <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 model-left-content">
+            <button (click)="sendGroupMessage(groupSingalmessage.type='file')" data-dismiss="modal">Upload</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

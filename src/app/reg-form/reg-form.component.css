@@ -1,0 +1,12 @@
+@media only screen and (max-width: 425px) {
+  .all-wrapper{
+    margin: 0px !important;
+  }
+}
+
+.all-wrapper{
+  margin: 10% 150px !important;
+}
+.auth-box-w .logo-w{
+  padding: 5px !important;
+}
