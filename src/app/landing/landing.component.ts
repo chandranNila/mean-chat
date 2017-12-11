@@ -38,7 +38,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     gapi.load('auth2',  () => {
       this.auth2 = gapi.auth2.init({
-        client_id: '397011996209-v0dh02o698rishvkaa4al6aqcsuvnjvn.apps.googleusercontent.com', /*1047694967227-eh5k2cjpjp9s74f401unfj0jmhp44ast.apps.googleusercontent.com*/
+        client_id: '1047694967227-vkbnvc42dl6lbbm9ct8c3ft4v7evc1nk.apps.googleusercontent.com', /*1047694967227-eh5k2cjpjp9s74f401unfj0jmhp44ast.apps.googleusercontent.com*/
         cookiepolicy: 'single_host_origin',
         scope: 'profile email'
       });
@@ -87,12 +87,51 @@ export class LandingComponent implements OnInit, AfterViewInit {
         });
        /* sessionStorage.setItem('loginAuth', JSON.stringify(this.loginAuth));*/
         console.log('this.loginAuth', this.loginAuth);
+      /*  gapi.client.load('plus', 'v1', function () {
+          const request = gapi.client.plus.people.get({
+            'userId': 'me'
+          });
+          console.log('hi request', request);
+          request.execute(function (resp) {
+            console.log('hi resp', resp);
+            const sample = {
+              username: resp.name.givenName,
+              mailId: resp.emails[0].value,
+              type: resp.emails[0].type,
+              path: resp.image.url,
+              status: 'Online'
+            };
+            /!*const commonService = new CommonService();
+            commonService.setAuthValue(sample);*!/
+            console.log('sample', resp.name.givenName);
+            console.log('sample', resp.emails[0].value);
+            console.log('sample', resp.emails[0].type);
+            console.log('sample', resp.url);
+            console.log('sample', resp.image.url);
+           /!* commonService.getAuthValue();*!/
+
+          });
+
+        });*/
+
+
+        /*this.router.navigate(['/registrationForm']);*/
+
       }, function (error) {
         console.log('error', error);
       });
 
   }
 
+  /*setLoginResponse(res) {
+    console.log('res', res);
+    this.chatService.signUp(res).then((result) => {
+      console.log('result', result);
+      alert('Created Successfully');
+    }, (err) => {
+      console.log(err);
+    });
+  }*/
   /*User LogIn*/
   userLogin() {
     console.log('loginUsers', this.loginUsers);

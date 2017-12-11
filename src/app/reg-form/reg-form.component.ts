@@ -67,12 +67,16 @@ export class RegFormComponent implements OnInit, AfterViewInit {
       const fileSize = fileInput.get(0).files[0].size; // in bytes
       if (fileSize > maxSize) {
         this.profileSize = ' Selected file size is more than ' + maxSize + ' bytes';
+       /* alert('file size is more than ' + maxSize + ' bytes');*/
        this.profile = '';
         return false;
       }else {
         this.profileSize = 'file size is correct - ' + fileSize + ' bytes';
       }
-    }
+    }/*else {
+      alert('Please select the file to upload');
+      return false;
+    }*/
   }
 
   /*onChange(event) {
